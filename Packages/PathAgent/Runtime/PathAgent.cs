@@ -35,16 +35,26 @@ namespace GudKoodi.LineWalker.Runtime
             {
                 this.transition += this.pathNode.DistanceToLeftNode;
                 this.pathNode = this.pathNode.Left;
+                if (this.pathNode.DistanceToLeftNode == 0)
+                {
+                    this.transition = 0;
+                    return;
+                }
             }
             while (this.transition >= this.pathNode.DistanceToRightNode)
             {
                 this.transition -= this.pathNode.DistanceToRightNode;
                 this.pathNode = this.pathNode.Right;
+                if (this.pathNode.DistanceToRightNode == 0)
+                {
+                    this.transition = 0;
+                    return;
+                }
             }
 
             var newPosition = this.pathNode.MoveTowardsRightNode(transition);
             newPosition.y = rb.position.y;
-            this.rb.position = newPosition;
+            this.rb.MovePosition(newPosition);
         }
 
         private PathNode FindClosestWaypoint()

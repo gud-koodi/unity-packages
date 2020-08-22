@@ -1,0 +1,16 @@
+{
+    "name": "GudKoodi.PathAgent.Example",
+    "references": [
+        "GudKoodi.LineWalker",
+        "GudKoodi.LineWalker.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
