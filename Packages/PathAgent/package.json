@@ -1,0 +1,11 @@
+{
+  "name": "com.gud-koodi.path-agent",
+  "version": "0.1.0",
+  "displayName": "Path Agent",
+  "description": "Prototype of line pathing in 3D space",
+  "unity": "2019.4",
+  "author": {
+    "name": "Gud Koodi"
+  },
+  "type": "sample"
+}
