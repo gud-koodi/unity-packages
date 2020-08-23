@@ -1,0 +1,16 @@
+{
+    "name": "GudKoodi.PathAgent.Editor",
+    "references": [
+        "GudKoodi.PathAgent",
+        "GudKoodi.PathAgent.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

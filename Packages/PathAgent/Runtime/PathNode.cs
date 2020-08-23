@@ -51,6 +51,13 @@
 
         void OnDrawGizmos()
         {
+            Gizmos.color = Color.green;
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawWireCube(this.transform.position, this.transform.lossyScale);
+        }
+
+        void OnDrawGizmosSelected()
+        {
             Gizmos.color = Color.red;
 
             if (this.left)
