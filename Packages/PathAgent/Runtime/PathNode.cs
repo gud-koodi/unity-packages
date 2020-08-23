@@ -1,4 +1,4 @@
-﻿namespace GudKoodi.LineWalker.Runtime
+﻿namespace GudKoodi.PathAgent.Runtime
 {
     using UnityEngine;
 

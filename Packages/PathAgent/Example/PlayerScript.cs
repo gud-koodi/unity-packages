@@ -1,7 +1,7 @@
-﻿namespace GudKoodi.LineWalker.Example
+﻿namespace GudKoodi.PathAgent.Example
 {
     using UnityEngine;
-    using GudKoodi.LineWalker.Runtime;
+    using GudKoodi.PathAgent.Runtime;
 
     public class PlayerScript : MonoBehaviour
     {
