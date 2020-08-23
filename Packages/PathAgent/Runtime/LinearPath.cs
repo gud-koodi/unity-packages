@@ -1,5 +1,5 @@
 ﻿
-namespace GudKoodi.PathAgent.Runtime
+namespace GudKoodi.PathAgent
 {
     using UnityEngine;
 

@@ -1,8 +1,7 @@
 {
     "name": "GudKoodi.PathAgent.Example",
     "references": [
-        "GudKoodi.PathAgent",
-        "GudKoodi.PathAgent.Runtime"
+        "GudKoodi.PathAgent"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

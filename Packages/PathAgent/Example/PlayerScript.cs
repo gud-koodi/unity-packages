@@ -1,7 +1,7 @@
 ﻿namespace GudKoodi.PathAgent.Example
 {
     using UnityEngine;
-    using GudKoodi.PathAgent.Runtime;
+    using GudKoodi.PathAgent;
 
     public class PlayerScript : MonoBehaviour
     {

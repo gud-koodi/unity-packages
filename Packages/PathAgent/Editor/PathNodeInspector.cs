@@ -1,6 +1,6 @@
 namespace GudKoodi.PathAgent.Editor
 {
-    using GudKoodi.PathAgent.Runtime;
+    using GudKoodi.PathAgent;
     using UnityEditor;
     using UnityEngine;
 
