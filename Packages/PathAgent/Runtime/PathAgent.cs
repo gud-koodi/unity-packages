@@ -33,23 +33,23 @@ namespace GudKoodi.PathAgent.Runtime
             this.transition += this.Speed * Time.fixedDeltaTime;
             while (this.transition < 0)
             {
-                this.transition += this.pathNode.DistanceToLeftNode;
-                this.pathNode = this.pathNode.Left;
                 if (this.pathNode.DistanceToLeftNode == 0)
                 {
                     this.transition = 0;
                     return;
                 }
+                this.transition += this.pathNode.DistanceToLeftNode;
+                this.pathNode = this.pathNode.Left;
             }
             while (this.transition >= this.pathNode.DistanceToRightNode)
             {
-                this.transition -= this.pathNode.DistanceToRightNode;
-                this.pathNode = this.pathNode.Right;
                 if (this.pathNode.DistanceToRightNode == 0)
                 {
                     this.transition = 0;
                     return;
                 }
+                this.transition -= this.pathNode.DistanceToRightNode;
+                this.pathNode = this.pathNode.Right;
             }
 
             var newPosition = this.pathNode.MoveTowardsRightNode(transition);
