@@ -4,6 +4,8 @@
 
     public class PathNode : MonoBehaviour
     {
+        private const float MAX_GIZMO_KNOT_DISTANCE = 2f;
+
         [SerializeField]
         private PathNode left;
 
@@ -23,12 +25,12 @@
 
         public Vector3 MoveTowardsLeftNode(float distance)
         {
-            return this.pathToLeftNode.GetPointOnCurve(distance);
+            return this.pathToLeftNode.GetPointOnPath(distance);
         }
 
         public Vector3 MoveTowardsRightNode(float distance)
         {
-            return this.pathToRightNode.GetPointOnCurve(distance);
+            return this.pathToRightNode.GetPointOnPath(distance);
         }
 
         void Start()
@@ -45,6 +47,38 @@
 
             this.pathToLeftNode = new LinearPath(this.transform.position, this.left.transform.position);
             this.pathToRightNode = new LinearPath(this.transform.position, this.right.transform.position);
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+
+            if (this.left)
+            {
+                var path = new LinearPath(this.transform.position, this.left.transform.position);
+                if (path.Length > 0)
+                {
+                    var interval = path.Length / Mathf.Ceil(path.Length / MAX_GIZMO_KNOT_DISTANCE);
+                    for (float i = 0; i < path.Length; i += interval)
+                    {
+                        Gizmos.DrawSphere(path.GetPointOnPath(i), 0.1f);
+                    }
+                }
+            }
+
+
+            if (this.right)
+            {
+                var path = new LinearPath(this.transform.position, this.right.transform.position);
+                if (path.Length > 0)
+                {
+                    var interval = path.Length / Mathf.Ceil(path.Length / MAX_GIZMO_KNOT_DISTANCE);
+                    for (float i = 0; i < path.Length; i += interval)
+                    {
+                        Gizmos.DrawSphere(path.GetPointOnPath(i), 0.1f);
+                    }
+                }
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace GudKoodi.PathAgent.Runtime
 
         public float Length => this.length;
 
-        public Vector3 GetPointOnCurve(float transition)
+        public Vector3 GetPointOnPath(float transition)
         {
             return Vector3.MoveTowards(this.start, this.end, Mathf.Clamp(transition, 0, this.length));
         }
