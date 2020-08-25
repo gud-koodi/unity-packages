@@ -7,14 +7,10 @@ namespace GudKoodi.PathAgent
         public float Speed;
 
         private int pathMask;
-        
-        [SerializeField]
-        private PathNode pathNode;
 
         private Rigidbody rb;
 
-        [SerializeField]
-        private float transition;
+        private PathPosition pathPosition;
 
         void Awake()
         {
@@ -24,35 +20,19 @@ namespace GudKoodi.PathAgent
 
         void Start()
         {
-            this.pathNode = this.FindClosestWaypoint();
-            this.rb.position = this.pathNode.transform.position;
+            var node = this.FindClosestWaypoint();
+            if (!node)
+            {
+                Debug.LogError("Failed to find a waypoint.");
+            }
+            this.pathPosition = new PathPosition(node);
+            this.rb.position = this.pathPosition.WorldPosition;
         }
 
         void FixedUpdate()
         {
-            this.transition += this.Speed * Time.fixedDeltaTime;
-            while (this.transition < 0)
-            {
-                if (this.pathNode.DistanceToLeftNode == 0)
-                {
-                    this.transition = 0;
-                    return;
-                }
-                this.transition += this.pathNode.DistanceToLeftNode;
-                this.pathNode = this.pathNode.Left;
-            }
-            while (this.transition >= this.pathNode.DistanceToRightNode)
-            {
-                if (this.pathNode.DistanceToRightNode == 0)
-                {
-                    this.transition = 0;
-                    return;
-                }
-                this.transition -= this.pathNode.DistanceToRightNode;
-                this.pathNode = this.pathNode.Right;
-            }
-
-            var newPosition = this.pathNode.MoveTowardsRightNode(transition);
+            this.pathPosition = this.pathPosition + this.Speed * Time.fixedDeltaTime;
+            var newPosition = this.pathPosition.WorldPosition;
             newPosition.y = rb.position.y;
             this.rb.MovePosition(newPosition);
         }
