@@ -38,15 +38,22 @@
             if (this.left == null)
             {
                 this.left = this;
+                this.pathToLeftNode = new LinearPath(this.transform.position, this.transform.position);
+            }
+            else
+            {
+                this.pathToLeftNode = new InvertedPath(this.left.CreatePathToRightNode());
             }
 
             if (this.right == null)
             {
                 this.right = this;
+                this.pathToRightNode = new LinearPath(this.transform.position, this.transform.position);
             }
-
-            this.pathToLeftNode = new LinearPath(this.transform.position, this.left.transform.position);
-            this.pathToRightNode = new LinearPath(this.transform.position, this.right.transform.position);
+            else
+            {
+                this.pathToRightNode = this.CreatePathToRightNode();
+            }
         }
 
         void OnDrawGizmos()
@@ -86,6 +93,16 @@
                     }
                 }
             }
+        }
+
+        private BezierPath CreatePathToRightNode()
+        {
+            return new BezierPath(
+                this.transform.position,
+                this.transform.position + 5 * this.transform.forward,
+                this.right.transform.position - 5 * this.right.transform.forward,
+                this.right.transform.position
+            );
         }
     }
 }
