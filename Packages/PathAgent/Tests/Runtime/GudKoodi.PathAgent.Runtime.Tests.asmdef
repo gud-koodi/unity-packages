@@ -1,0 +1,17 @@
+{
+    "name": "GudKoodi.PathAgent.Runtime.Tests",
+    "references": [
+        "GudKoodi.PathAgent"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
