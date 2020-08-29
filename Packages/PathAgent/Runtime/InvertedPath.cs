@@ -13,9 +13,9 @@ namespace GudKoodi.PathAgent
 
         public float Length => this.path.Length;
 
-        public Vector3 GetPointOnPath(float transition)
+        public Vector3 GetPointOnPath(float transition, float height)
         {
-            return this.path.GetPointOnPath(this.path.Length - transition);
+            return this.path.GetPointOnPath(this.path.Length - transition, height);
         }
     }
 }

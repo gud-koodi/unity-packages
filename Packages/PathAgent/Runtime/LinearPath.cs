@@ -20,9 +20,11 @@ namespace GudKoodi.PathAgent
 
         public float Length => this.length;
 
-        public Vector3 GetPointOnPath(float transition)
+        public Vector3 GetPointOnPath(float transition, float height)
         {
-            return Vector3.MoveTowards(this.start, this.end, Mathf.Clamp(transition, 0, this.length));
+            var vector = Vector3.MoveTowards(this.start, this.end, Mathf.Clamp(transition, 0, this.length));
+            vector.y = height;
+            return vector;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace GudKoodi.PathAgent
         private Rigidbody rb;
 
         private PathPosition pathPosition;
+        private PathPosition previousPosition;
 
         void Awake()
         {
@@ -26,15 +27,25 @@ namespace GudKoodi.PathAgent
                 Debug.LogError("Failed to find a waypoint.");
             }
             this.pathPosition = new PathPosition(node);
-            this.rb.position = this.pathPosition.WorldPosition;
+            this.previousPosition = this.pathPosition;
+            this.rb.position = this.pathPosition.getWorldPosition(this.rb.position.y);
         }
 
         void FixedUpdate()
         {
-            this.pathPosition = this.pathPosition + this.Speed * Time.fixedDeltaTime;
-            var newPosition = this.pathPosition.WorldPosition;
-            newPosition.y = rb.position.y;
-            this.rb.MovePosition(newPosition);
+            var rbPosition = this.rb.position;
+            this.previousPosition = this.closer(this.rb.position, this.pathPosition, this.previousPosition);
+            this.pathPosition = previousPosition + this.Speed * Time.fixedDeltaTime;
+            var vectorPosition = this.pathPosition.getWorldPosition(this.rb.position.y);
+            vectorPosition.y = rb.position.y;
+            this.rb.MovePosition(vectorPosition);
+        }
+
+        private PathPosition closer(Vector3 from, PathPosition a, PathPosition b)
+        {
+            var distanceA = (from - a.getWorldPosition(this.rb.position.y)).sqrMagnitude;
+            var distanceB = (from - b.getWorldPosition(this.rb.position.y)).sqrMagnitude;
+            return (distanceA <= distanceB) ? a : b;
         }
 
         private PathNode FindClosestWaypoint()

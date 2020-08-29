@@ -6,6 +6,6 @@
     {
         float Length { get; }
 
-        Vector3 GetPointOnPath(float transition);
+        Vector3 GetPointOnPath(float transition, float height);
     }
 }

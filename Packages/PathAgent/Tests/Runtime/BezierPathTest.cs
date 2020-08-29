@@ -40,7 +40,7 @@ namespace GudKoodi.PathAgent.Tests
             var path = this.GetLinearPath(Vector3.zero, 10 * Vector3.right);
             foreach (var i in new int[] { 0, 1, 3, 6, 10 })
             {
-                Assert.AreEqual(i * Vector3.right, path.GetPointOnPath(i));
+                Assert.AreEqual(i * Vector3.right, path.GetPointOnPath(i, 0));
             }
         }
 
@@ -48,8 +48,8 @@ namespace GudKoodi.PathAgent.Tests
         public void GetPointOnPathIsClampedToLength()
         {
             var path = this.GetLinearPath(Vector3.zero, Vector3.right);
-            Assert.AreEqual(Vector3.zero, path.GetPointOnPath(-1));
-            Assert.AreEqual(Vector3.right, path.GetPointOnPath(2));
+            Assert.AreEqual(Vector3.zero, path.GetPointOnPath(-1, 0));
+            Assert.AreEqual(Vector3.right, path.GetPointOnPath(2, 0));
         }
     }
 }

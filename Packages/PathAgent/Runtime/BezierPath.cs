@@ -35,12 +35,14 @@ namespace GudKoodi.PathAgent
 
         public float Length { get; }
 
-        public Vector3 GetPointOnPath(float transition)
+        public Vector3 GetPointOnPath(float transition, float height)
         {
             transition = Mathf.Clamp(transition, 0, this.Length);
             if (transition >= this.Length)
             {
-                return this.points[SEGMENTS];
+                var v = this.points[SEGMENTS];
+                v.y = height;
+                return v;
             }
 
             var i = 0;
@@ -50,7 +52,9 @@ namespace GudKoodi.PathAgent
                 i++;
             }
 
-            return Vector3.MoveTowards(this.points[i], this.points[i+1], transition);
+            var vector = Vector3.MoveTowards(this.points[i], this.points[i+1], transition);
+            vector.y = height;
+            return vector;
         }
     }
 }

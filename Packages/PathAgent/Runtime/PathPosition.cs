@@ -23,7 +23,10 @@ namespace GudKoodi.PathAgent
 
         public float Transition { get; }
 
-        public Vector3 WorldPosition => this.PathNode.MoveTowardsRightNode(this.Transition);
+        public Vector3 getWorldPosition(float height)
+        {
+            return this.PathNode.MoveTowardsRightNode(this.Transition, height);
+        }
 
         private PathPosition NegativeTransformation(float negativeTransition)
         {

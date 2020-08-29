@@ -23,14 +23,14 @@
 
         public float DistanceToRightNode => this.pathToRightNode.Length;
 
-        public Vector3 MoveTowardsLeftNode(float distance)
+        public Vector3 MoveTowardsLeftNode(float distance, float height)
         {
-            return this.pathToLeftNode.GetPointOnPath(distance);
+            return this.pathToLeftNode.GetPointOnPath(distance, height);
         }
 
-        public Vector3 MoveTowardsRightNode(float distance)
+        public Vector3 MoveTowardsRightNode(float distance, float height)
         {
-            return this.pathToRightNode.GetPointOnPath(distance);
+            return this.pathToRightNode.GetPointOnPath(distance, height);
         }
 
         void Start()
@@ -75,7 +75,7 @@
                     var interval = path.Length / Mathf.Ceil(path.Length / MAX_GIZMO_KNOT_DISTANCE);
                     for (float i = 0; i < path.Length; i += interval)
                     {
-                        Gizmos.DrawSphere(path.GetPointOnPath(i), 0.1f);
+                        Gizmos.DrawSphere(path.GetPointOnPath(i, this.transform.position.y), 0.1f);
                     }
                 }
             }
@@ -89,7 +89,7 @@
                     var interval = path.Length / Mathf.Ceil(path.Length / MAX_GIZMO_KNOT_DISTANCE);
                     for (float i = 0; i < path.Length; i += interval)
                     {
-                        Gizmos.DrawSphere(path.GetPointOnPath(i), 0.1f);
+                        Gizmos.DrawSphere(path.GetPointOnPath(i, this.transform.position.y), 0.1f);
                     }
                 }
             }

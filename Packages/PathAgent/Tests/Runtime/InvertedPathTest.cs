@@ -21,7 +21,7 @@ namespace GudKoodi.PathAgent.Tests
             foreach (var i in new float[] { 0f, 0.1f, 0.3f, 0.6f, 1f })
             {
                 var t = i * length;
-                Assert.True(bezierPath.GetPointOnPath(t) == invertedPath.GetPointOnPath(length - t));
+                Assert.True(bezierPath.GetPointOnPath(t, 0) == invertedPath.GetPointOnPath(length - t, 0));
             }
         }
     }
