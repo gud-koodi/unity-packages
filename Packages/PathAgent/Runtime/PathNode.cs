@@ -6,11 +6,14 @@
     {
         private const float MAX_GIZMO_KNOT_DISTANCE = 2f;
 
+        // allow these fields to be null
+#pragma warning disable CS0649
         [SerializeField]
         private PathNode left;
 
         [SerializeField]
         private PathNode right;
+#pragma warning restore CS0649
 
         private IPath pathToLeftNode;
         private IPath pathToRightNode;
@@ -22,6 +25,10 @@
         public float DistanceToLeftNode => this.pathToLeftNode.Length;
 
         public float DistanceToRightNode => this.pathToRightNode.Length;
+
+        private Vector3 LeftEdge => this.transform.position - 0.5f * this.transform.localScale.x * this.transform.right;
+
+        private Vector3 RightEdge => this.transform.position + 0.5f * this.transform.localScale.x * this.transform.right;
 
         public Vector3 MoveTowardsLeftNode(float distance, float height)
         {
@@ -35,72 +42,72 @@
 
         void Start()
         {
-            if (this.left == null)
-            {
-                this.left = this;
-                this.pathToLeftNode = new LinearPath(this.transform.position, this.transform.position);
-            }
-            else
-            {
-                this.pathToLeftNode = new InvertedPath(this.left.CreatePathToRightNode());
-            }
-
-            if (this.right == null)
-            {
-                this.right = this;
-                this.pathToRightNode = new LinearPath(this.transform.position, this.transform.position);
-            }
-            else
-            {
-                this.pathToRightNode = this.CreatePathToRightNode();
-            }
+            this.CreatePaths();
         }
 
         void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
             Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.DrawWireCube(this.transform.position, this.transform.lossyScale);
+            Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
         }
 
         void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.red;
+            this.CreatePaths();
+            var upperHeight = this.transform.position.y + 0.5f * this.transform.localScale.y;
+            var lowerHeight = this.transform.position.y - 0.5f * this.transform.localScale.y;
 
-            if (this.left)
+            Gizmos.color = Color.yellow;
+            foreach (var vector in new Vector3[] {
+                (this.left) ? this.left.transform.position : this.LeftEdge,
+                this.transform.position,
+                (this.right) ? this.right.transform.position : this.RightEdge,
+            })
             {
-                var path = new LinearPath(this.transform.position, this.left.transform.position);
-                if (path.Length > 0)
-                {
-                    var interval = path.Length / Mathf.Ceil(path.Length / MAX_GIZMO_KNOT_DISTANCE);
-                    for (float i = 0; i < path.Length; i += interval)
-                    {
-                        Gizmos.DrawSphere(path.GetPointOnPath(i, this.transform.position.y), 0.1f);
-                    }
-                }
+                Gizmos.DrawSphere(vector, 0.2f);
             }
 
-
-            if (this.right)
+            Gizmos.color = Color.red;
+            foreach (var path in new IPath[] { this.pathToLeftNode, this.pathToRightNode })
             {
-                var path = new LinearPath(this.transform.position, this.right.transform.position);
                 if (path.Length > 0)
                 {
                     var interval = path.Length / Mathf.Ceil(path.Length / MAX_GIZMO_KNOT_DISTANCE);
                     for (float i = 0; i < path.Length; i += interval)
                     {
-                        Gizmos.DrawSphere(path.GetPointOnPath(i, this.transform.position.y), 0.1f);
+                        Gizmos.DrawLine(path.GetPointOnPath(i, upperHeight), path.GetPointOnPath(i, lowerHeight));
                     }
                 }
             }
         }
 
-        private BezierPath CreatePathToRightNode()
+        private void CreatePaths()
+        {
+            this.pathToLeftNode = (this.left)
+                ? this.CreatePathToLeftNode()
+                : (IPath)new LinearPath(this.transform.position, this.LeftEdge);
+            this.pathToRightNode = (this.right)
+                ? this.CreatePathToRightNode()
+                : (IPath)new LinearPath(this.transform.position, this.RightEdge);
+        }
+
+        private IPath CreatePathToLeftNode()
+        {
+            return new InvertedPath(new BezierPath(
+                this.left.transform.position,
+                this.left.RightEdge,
+                this.LeftEdge,
+                this.transform.position
+            ));
+        }
+
+        private IPath CreatePathToRightNode()
         {
             return new BezierPath(
                 this.transform.position,
-                this.transform.position + 5 * this.transform.forward,
-                this.right.transform.position - 5 * this.right.transform.forward,
+                this.RightEdge,
+                this.right.LeftEdge,
                 this.right.transform.position
             );
         }

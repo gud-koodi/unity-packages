@@ -6,6 +6,8 @@ namespace GudKoodi.PathAgent
     {
         public float Speed;
 
+        public PathNode StartNode;
+
         private int pathMask;
 
         private Rigidbody rb;
@@ -21,12 +23,7 @@ namespace GudKoodi.PathAgent
 
         void Start()
         {
-            var node = this.FindClosestWaypoint();
-            if (!node)
-            {
-                Debug.LogError("Failed to find a waypoint.");
-            }
-            this.pathPosition = new PathPosition(node);
+            this.pathPosition = new PathPosition(this.StartNode);
             this.previousPosition = this.pathPosition;
             this.rb.position = this.pathPosition.getWorldPosition(this.rb.position.y);
         }
@@ -46,25 +43,6 @@ namespace GudKoodi.PathAgent
             var distanceA = (from - a.getWorldPosition(this.rb.position.y)).sqrMagnitude;
             var distanceB = (from - b.getWorldPosition(this.rb.position.y)).sqrMagnitude;
             return (distanceA <= distanceB) ? a : b;
-        }
-
-        private PathNode FindClosestWaypoint()
-        {
-            var waypoints = Physics.OverlapSphere(rb.position, 5.0f, pathMask);
-            if (waypoints.Length == 0)
-            {
-                Debug.LogWarning("No path nodes found.");
-                return null;
-            }
-
-            // "Closest"
-            var waypoint = waypoints[0].GetComponent<PathNode>();
-            if (waypoint == null)
-            {
-                Debug.LogWarning("No path node component found.");
-            }
-
-            return waypoint;
         }
     }
 }

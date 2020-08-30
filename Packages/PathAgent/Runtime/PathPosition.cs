@@ -39,6 +39,12 @@ namespace GudKoodi.PathAgent
                 {
                     return new PathPosition(node);
                 }
+
+                if (node.Left == null)
+                {
+                    return new PathPosition(node, Mathf.Clamp(relativePosition, 0, node.DistanceToLeftNode));
+                }
+
                 relativePosition += node.DistanceToLeftNode;
                 node = node.Left;
             }
@@ -57,6 +63,12 @@ namespace GudKoodi.PathAgent
                 {
                     return new PathPosition(node);
                 }
+
+                if (node.Right == null)
+                {
+                    return new PathPosition(node, Mathf.Clamp(relativePosition, 0, node.DistanceToRightNode));
+                }
+
                 relativePosition -= node.DistanceToRightNode;
                 node = node.Right;
             }
