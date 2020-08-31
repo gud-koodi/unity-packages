@@ -5,26 +5,24 @@ namespace GudKoodi.PathAgent
 
     public class LinearPath : IPath
     {
-        private readonly Vector3 start;
-        private readonly Vector3 end;
+        private readonly Vector2 start;
+        private readonly Vector2 end;
 
         private readonly float length;
 
         public LinearPath(Vector3 start, Vector3 end)
         {
-            float height = Mathf.Min(start.y, end.y);
-            this.start = new Vector3(start.x, height, start.z);
-            this.end = new Vector3(end.x, height, end.z);
-            this.length = Vector3.Distance(this.start, this.end);
+            this.start = new Vector2(start.x, start.z);
+            this.end = new Vector2(start.x, start.z);
+            this.length = Vector2.Distance(this.start, this.end);
         }
 
         public float Length => this.length;
 
         public Vector3 GetPointOnPath(float transition, float height)
         {
-            var vector = Vector3.MoveTowards(this.start, this.end, Mathf.Clamp(transition, 0, this.length));
-            vector.y = height;
-            return vector;
+            var vector = Vector2.MoveTowards(this.start, this.end, Mathf.Clamp(transition, 0, this.length));
+            return new Vector3(vector.x, height, vector.y);
         }
     }
 }
