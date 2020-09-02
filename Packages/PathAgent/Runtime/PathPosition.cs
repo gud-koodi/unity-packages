@@ -23,6 +23,12 @@ namespace GudKoodi.PathAgent
 
         public float Transition { get; }
 
+        public Quaternion CameraTangentRotation => Quaternion.Slerp(
+            this.PathNode.CameraTangentRotation,
+            this.PathNode.Right.CameraTangentRotation,
+            this.Transition / this.PathNode.DistanceToRightNode
+        );
+
         public Vector3 getWorldPosition(float height)
         {
             return this.PathNode.MoveTowardsRightNode(this.Transition, height);

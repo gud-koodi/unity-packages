@@ -7,27 +7,34 @@ namespace GudKoodi.PathAgent
     {
         private const int SEGMENTS = 5;
 
-        private readonly Vector2[] points;
-        private readonly float[] sublengths;
+        private readonly Quaternion StartCameraRotation;
+        private readonly Quaternion EndCameraRotation;
+        private readonly Vector2[] Points;
+        private readonly float[] Sublengths;
 
-        public BezierPath(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
+        public BezierPath(Vector3 a, Vector3 b, Vector3 c, Vector3 d) : this(a, Quaternion.identity, b, c, d, Quaternion.identity)
         {
-            float height = Mathf.Min(a.y, d.y);
-            this.points = new Vector2[SEGMENTS+1];
+        }
+
+        public BezierPath(Vector3 a, Quaternion startCameraRotation, Vector3 b, Vector3 c, Vector3 d, Quaternion endCameraRotation)
+        {
+            this.StartCameraRotation = startCameraRotation;
+            this.EndCameraRotation = endCameraRotation;
+            this.Points = new Vector2[SEGMENTS + 1];
             for (int i = 0; i <= SEGMENTS; i++)
             {
-                var t = (float) i / SEGMENTS;
+                var t = (float)i / SEGMENTS;
                 var _t = 1 - t;
                 var point = Mathf.Pow(_t, 3) * a + 3 * Mathf.Pow(_t, 2) * t * b + 3 * _t * Mathf.Pow(t, 2) * c + Mathf.Pow(t, 3) * d;
-                this.points[i] = new Vector2(point.x, point.z);
+                this.Points[i] = new Vector2(point.x, point.z);
             }
 
             var length = 0f;
-            this.sublengths = new float[SEGMENTS];
+            this.Sublengths = new float[SEGMENTS];
             for (int i = 0; i < SEGMENTS; i++)
             {
-                this.sublengths[i] = Vector2.Distance(this.points[i], this.points[i+1]);
-                length += this.sublengths[i];
+                this.Sublengths[i] = Vector2.Distance(this.Points[i], this.Points[i + 1]);
+                length += this.Sublengths[i];
             }
 
             this.Length = length;
@@ -35,24 +42,29 @@ namespace GudKoodi.PathAgent
 
         public float Length { get; }
 
+        public Quaternion GetCameraTangentRotationOnPath(float transition)
+        {
+            return Quaternion.Slerp(StartCameraRotation, EndCameraRotation, transition / this.Length);
+        }
+
         public Vector3 GetPointOnPath(float transition, float height)
         {
             transition = Mathf.Clamp(transition, 0, this.Length);
             if (transition >= this.Length)
             {
-                var v = this.points[SEGMENTS];
+                var v = this.Points[SEGMENTS];
                 v.y = height;
                 return v;
             }
 
             var i = 0;
-            while (transition > sublengths[i])
+            while (transition > Sublengths[i])
             {
-                transition -= sublengths[i];
+                transition -= Sublengths[i];
                 i++;
             }
 
-            var vector = Vector2.MoveTowards(this.points[i], this.points[i+1], transition);
+            var vector = Vector2.MoveTowards(this.Points[i], this.Points[i + 1], transition);
             return new Vector3(vector.x, height, vector.y);
         }
     }

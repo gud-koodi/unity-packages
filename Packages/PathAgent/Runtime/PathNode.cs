@@ -15,12 +15,24 @@
         private PathNode right;
 #pragma warning restore CS0649
 
+        public Vector3 CameraGuide;
+
         private IPath pathToLeftNode;
         private IPath pathToRightNode;
 
         public PathNode Left => this.left;
 
         public PathNode Right => this.right;
+
+        public Quaternion CameraTangentRotation
+        {
+            get
+            {
+                var v = this.transform.position - this.CameraGuide;
+                v.y = 0;
+                return Quaternion.LookRotation(v);
+            }
+        }
 
         public float DistanceToLeftNode => this.pathToLeftNode.Length;
 
@@ -47,6 +59,9 @@
 
         void OnDrawGizmos()
         {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(this.CameraGuide, new Vector3(this.transform.position.x, this.CameraGuide.y, this.transform.position.z));
+
             Gizmos.color = Color.green;
             Gizmos.matrix = transform.localToWorldMatrix;
             Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
@@ -86,19 +101,21 @@
         {
             this.pathToLeftNode = (this.left)
                 ? this.CreatePathToLeftNode()
-                : (IPath)new LinearPath(this.transform.position, this.LeftEdge);
+                : (IPath)new LinearPath(this.transform.position, Quaternion.identity, this.LeftEdge, Quaternion.identity);
             this.pathToRightNode = (this.right)
                 ? this.CreatePathToRightNode()
-                : (IPath)new LinearPath(this.transform.position, this.RightEdge);
+                : (IPath)new LinearPath(this.transform.position, Quaternion.identity, this.RightEdge, Quaternion.identity);
         }
 
         private IPath CreatePathToLeftNode()
         {
             return new InvertedPath(new BezierPath(
                 this.left.transform.position,
+                this.left.CameraTangentRotation,
                 this.left.RightEdge,
                 this.LeftEdge,
-                this.transform.position
+                this.transform.position,
+                this.CameraTangentRotation
             ));
         }
 
@@ -106,9 +123,11 @@
         {
             return new BezierPath(
                 this.transform.position,
+                this.CameraTangentRotation,
                 this.RightEdge,
                 this.right.LeftEdge,
-                this.right.transform.position
+                this.right.transform.position,
+                this.right.CameraTangentRotation
             );
         }
     }

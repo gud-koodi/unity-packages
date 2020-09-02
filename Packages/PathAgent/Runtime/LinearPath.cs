@@ -5,23 +5,30 @@ namespace GudKoodi.PathAgent
 
     public class LinearPath : IPath
     {
-        private readonly Vector2 start;
-        private readonly Vector2 end;
+        private readonly Vector2 Start;
+        private readonly Quaternion StartCameraRotation;
+        private readonly Vector2 End;
+        private readonly Quaternion EndCameraRotation;
 
-        private readonly float length;
-
-        public LinearPath(Vector3 start, Vector3 end)
+        public LinearPath(Vector3 start, Quaternion startCameraRotation, Vector3 end, Quaternion endCameraRotation)
         {
-            this.start = new Vector2(start.x, start.z);
-            this.end = new Vector2(start.x, start.z);
-            this.length = Vector2.Distance(this.start, this.end);
+            this.Start = new Vector2(start.x, start.z);
+            this.StartCameraRotation = startCameraRotation;
+            this.End = new Vector2(start.x, start.z);
+            this.EndCameraRotation = endCameraRotation;
+            this.Length = Vector2.Distance(this.Start, this.End);
         }
 
-        public float Length => this.length;
+        public float Length { get; }
+
+        public Quaternion GetCameraTangentRotationOnPath(float transition)
+        {
+            return Quaternion.Slerp(StartCameraRotation, EndCameraRotation, transition / this.Length);
+        }
 
         public Vector3 GetPointOnPath(float transition, float height)
         {
-            var vector = Vector2.MoveTowards(this.start, this.end, Mathf.Clamp(transition, 0, this.length));
+            var vector = Vector2.MoveTowards(this.Start, this.End, Mathf.Clamp(transition, 0, this.Length));
             return new Vector3(vector.x, height, vector.y);
         }
     }

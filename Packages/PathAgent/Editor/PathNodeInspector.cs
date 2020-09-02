@@ -19,6 +19,11 @@ namespace GudKoodi.PathAgent.Editor
             this.right = serializedObject.FindProperty("right");
         }
 
+        void OnSceneGUI()
+        {
+            this.node.CameraGuide = Handles.PositionHandle(this.node.CameraGuide, this.node.transform.rotation);
+        }
+
         public override void OnInspectorGUI()
         {
             EditorGUIUtility.labelWidth = 50;
@@ -29,6 +34,8 @@ namespace GudKoodi.PathAgent.Editor
             EditorGUILayout.PropertyField(this.left, new GUIContent("Left"));
             EditorGUILayout.PropertyField(this.right, new GUIContent("Right"));
             EditorGUILayout.EndHorizontal();
+
+            this.node.CameraGuide = EditorGUILayout.Vector3Field("Camera", this.node.CameraGuide);
 
             EditorGUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();

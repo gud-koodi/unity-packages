@@ -15,6 +15,8 @@ namespace GudKoodi.PathAgent
         private PathPosition pathPosition;
         private PathPosition previousPosition;
 
+        public PathPosition PathPosition => this.pathPosition;
+
         void Awake()
         {
             this.pathMask = LayerMask.GetMask("Path");

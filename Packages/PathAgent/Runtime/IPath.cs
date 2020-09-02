@@ -6,6 +6,8 @@
     {
         float Length { get; }
 
+        Quaternion GetCameraTangentRotationOnPath(float transition);
+
         Vector3 GetPointOnPath(float transition, float height);
     }
 }
